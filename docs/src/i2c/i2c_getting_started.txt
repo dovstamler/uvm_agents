@@ -1,0 +1,18 @@
+Title: Getting Started With I2C
+
+This document contains information regarding the classes, functions, 
+members, definitions and constraints of this open source I2C UVM agent. 
+Familiarity with UVM is a prerequisite for integration and usage of this agent.
+
+_Initial Integration_ -
+Please follow the instructions in the <I2C Package Integration> description. 
+
+_Working with the Agent_ -
+The agent configuration is preset to default values to allow a simple
+initial integration. By using the default configuration, the agent will
+begin to work in an environment without any modifications. Once you are 
+satisfied the integration is complete, review the variables and constraints of the <i2c_cfg>
+object and the <i2c_sequence_item> to adapt changes required for the current working environment. 
+
+_Release Notes_ -
+Please review the <I2C Release Notes> for updates and limitations of the agent.

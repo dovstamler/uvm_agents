@@ -1,0 +1,10 @@
+Title: I2C Release Notes
+
+Version: 1.0
+
+Supported Functionality: 
+- Slave driver
+- 7 bit addressing
+- Continuous starts
+- Slave can receive multiple data words for a single address request
+

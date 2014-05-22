@@ -1,0 +1,54 @@
+Title: I2C Package Integration
+
+The following describes the steps needed to integrate the I2C package into 
+a working environment.
+
+_I2C Interface Instance and Binding_: see <i2c_if> for the interface instance and binding coding example.
+
+_Package Import_: The I2C package contains all of the declarations needed to 
+instantiate and use an I2C agent. Import the package into the working environment.
+(start code)
+import i2c_package::*;
+(end code)
+
+_Agent Instantiation in an Environment_: Instantiating an 
+I2C agent object requires the following:
+
+Virtual Interface - Define an I2C virtual interface and retrieve the pointer
+
+Creating the Agent Object - Create the agent object in the build phase. 
+Pass to the agent the I2C virtual interface and the I2C configuration object. 
+
+Connecting Agent to a Scoreboard (optional) - In the connect phase, connect the agents
+analysis port to your scoreboard.
+
+(start code)
+class env extends uvm_env;
+ .
+ .
+ virtual i2c_if i2c_sigs;
+ i2c_agent      i2c_agnt;
+ .
+ .
+ 
+function void build_phase(uvm_phase phase);
+ .
+ .
+ if (!uvm_config_db#(virtual i2c_if)::get(null, "uvm_test_top", "i2c_sigs", i2c_sigs))
+    `uvm_fatal("CFGERR", "i2c interface not set");
+ 
+ i2c_agnt      = i2c_agent::type_id::create("i2c_agnt", this);
+ i2c_agnt.cfg  = cfg.i2c_agnt_cfg; 
+ i2c_agnt.sigs = i2c_sigs;
+ .
+ .
+endfunction 
+
+function void connect_phase(uvm_phase phase);
+  .
+  .
+  i2c_agnt.analysis_port.connect(i2c_sb.receive_stream.analysis_export);
+  .
+  .
+endfunction
+(end code)

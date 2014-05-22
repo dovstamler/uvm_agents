@@ -1,0 +1,83 @@
+Format: Development Release 01-12-2008 (1.35 base)
+
+
+Title: Verification Cores
+
+# You can also add a sub-title to your menu like this:
+# SubTitle: [subtitle]
+
+Footer: Copyright 2014 Dov Stamler (dov.stamler@gmail.com)
+Timestamp: Generated on month day, year
+#   m     - One or two digit month.  January is "1"
+#   mm    - Always two digit month.  January is "01"
+#   mon   - Short month word.  January is "Jan"
+#   month - Long month word.  January is "January"
+#   d     - One or two digit day.  1 is "1"
+#   dd    - Always two digit day.  1 is "01"
+#   day   - Day with letter extension.  1 is "1st"
+#   yy    - Two digit year.  2006 is "06"
+#   yyyy  - Four digit year.  2006 is "2006"
+#   year  - Four digit year.  2006 is "2006"
+
+
+# --------------------------------------------------------------------------
+# 
+# Cut and paste the lines below to change the order in which your files
+# appear on the menu.  Don't worry about adding or removing files, Natural
+# Docs will take care of that.
+# 
+# You can further organize the menu by grouping the entries.  Add a
+# "Group: [name] {" line to start a group, and add a "}" to end it.
+# 
+# You can add text and web links to the menu by adding "Text: [text]" and
+# "Link: [name] ([URL])" lines, respectively.
+# 
+# The formatting and comments are auto-generated, so don't worry about
+# neatness when editing the file.  Natural Docs will clean it up the next
+# time it is run.  When working with groups, just deal with the braces and
+# forget about the indentation and comments.
+# 
+# --------------------------------------------------------------------------
+
+
+Group: I2C Agent  {
+
+   File: Getting Started With I2C  (docs/src/i2c/i2c_getting_started.txt)
+
+   Group: I2C Package  {
+
+      File: i2c_package  (no auto-title, src/i2c/i2c_package.sv)
+
+      Group: Agent Components  {
+
+         File: i2c_agent  (src/i2c/i2c_agent.sv)
+         File: i2c_cfg  (no auto-title, src/i2c/i2c_cfg.sv)
+         File: i2c_monitor  (no auto-title, src/i2c/i2c_monitor.sv)
+         File: i2c_sequence_item  (src/i2c/i2c_sequence_item.sv)
+         File: i2c_slave_driver  (src/i2c/i2c_slave_driver.sv)
+         }  # Group: Agent Components
+
+      }  # Group: I2C Package
+
+   Group: I2C Interface  {
+
+      File: i2c_if  (src/i2c/i2c_if.sv)
+      }  # Group: I2C Interface
+
+   File: I2C Package Integration  (docs/src/i2c/i2c_integration.txt)
+   File: I2C Release Notes  (src/i2c/release_notes.txt)
+   }  # Group: I2C Agent
+
+Group: Index  {
+
+   Index: Everything
+   Class Index: Classes
+   Method Index: Methods
+   Variable Index: Variables
+   Constant Index: Constants
+   Type Index: Types
+   Package Index: Packages
+   Constraint Index: Constraints
+   Interface Index: Interfaces
+   }  # Group: Index
+
