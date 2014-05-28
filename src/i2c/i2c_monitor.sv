@@ -49,7 +49,8 @@ endfunction: new
 
 //------------------------------------------------------------------------//
 // function: build_phase
-// UVM build phase
+// build phase is called by UVM flow. Creates analysis port to output a sequence item for a
+// monitored transaction. 
 function void i2c_monitor::build_phase(uvm_phase phase);
   super.build_phase(phase);
   
@@ -64,7 +65,7 @@ endfunction: build_phase
 
 //------------------------------------------------------------------------//
 // task: run_phase
-// UVM run phase
+// run phase is called by UVM flow. Monitor is active during this phase. 
 task i2c_monitor::run_phase(uvm_phase phase);
   i2c_sequence_item s_item;
   logic [7:0]     data          = '0;

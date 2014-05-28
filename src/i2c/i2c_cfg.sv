@@ -88,7 +88,7 @@ endfunction: new
 // constraints variable <is_active>. Default: is_active = UVM_ACTIVE.
 constraint i2c_cfg::agent_is_active_c { soft is_active == UVM_ACTIVE; }
 //------------------------------------------------------------------------//
-// constraint: address_bits_c
+// constraint: slave_address_c
 // constraints variable <slave_address>. Default: slave_address = 'h50.
 constraint i2c_cfg::slave_address_c { soft slave_address == 'h50; }
 //------------------------------------------------------------------------//

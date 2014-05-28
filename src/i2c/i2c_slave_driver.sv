@@ -60,8 +60,6 @@ function i2c_slave_driver::new(string name, uvm_component parent);
 endfunction: new
 
 //------------------------------------------------------------------------//
-// function: build_phase
-// UVM build phase
 function void i2c_slave_driver::build_phase(uvm_phase phase);
   super.build_phase(phase);
   
@@ -75,7 +73,7 @@ endfunction: build_phase
 
 //------------------------------------------------------------------------//
 // task: run_phase
-// UVM run phase. driver is active only during this phase
+// run phase is called by UVM flow. Driver is active during this phase.
 task i2c_slave_driver::run_phase(uvm_phase phase);
   logic           enable_slave  = 0;
   int             thread_number = 0;

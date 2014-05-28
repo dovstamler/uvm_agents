@@ -55,7 +55,7 @@ endfunction: new
 
 //------------------------------------------------------------------------//
 // task: build_phase
-// UVM build phase
+// build phase is called by UVM flow. 
 function void i2c_agent::build_phase(uvm_phase phase);
   super.build_phase(phase);
 
@@ -92,7 +92,8 @@ endfunction: build_phase
 
 //------------------------------------------------------------------//
 // task: connect_phase
-// UVM connect phase
+// connect phase is called by UVM flow. Connects monitor to agents analysis 
+// port so monitored transactions can be connected to a scoreboard. 
 function void i2c_agent::connect_phase(uvm_phase phase);
   super.connect_phase(phase);
   
