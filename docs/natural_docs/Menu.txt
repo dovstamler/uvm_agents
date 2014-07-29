@@ -40,7 +40,7 @@ Timestamp: Generated on month day, year
 # --------------------------------------------------------------------------
 
 
-Group: I2C Agent  {
+Group: I2C Agents  {
 
    File: Getting Started With I2C  (docs/src/i2c/i2c_getting_started.txt)
 
@@ -48,14 +48,35 @@ Group: I2C Agent  {
 
       File: i2c_package  (no auto-title, src/i2c/i2c_package.sv)
 
-      Group: Agent Components  {
+      Group: Master Agent  {
 
-         File: i2c_agent  (src/i2c/i2c_agent.sv)
-         File: i2c_cfg  (no auto-title, src/i2c/i2c_cfg.sv)
+         File: i2c_master_agent  (src/i2c/i2c_master_agent.sv)
+         File: i2c_master_cfg  (no auto-title, src/i2c/i2c_master_cfg.sv)
+         File: i2c_master_driver  (src/i2c/i2c_master_driver.sv)
+
+         Group: Sequence Package  {
+
+            File: i2c_sequence_package  (src/i2c/master_sequences/i2c_sequence_package.sv)
+            File: i2c_base_sequence  (src/i2c/master_sequences/i2c_base_sequence.sv)
+            File: i2c_basic_sequence  (src/i2c/master_sequences/i2c_basic_sequence.sv)
+            }  # Group: Sequence Package
+
+         }  # Group: Master Agent
+
+      Group: Slave Agent  {
+
+         File: i2c_slave_agent  (src/i2c/i2c_slave_agent.sv)
+         File: i2c_slave_cfg  (no auto-title, src/i2c/i2c_slave_cfg.sv)
+         File: i2c_slave_driver  (src/i2c/i2c_slave_driver.sv)
+         }  # Group: Slave Agent
+
+      Group: Common Objects  {
+
+         File: i2c_common_methods  (src/i2c/i2c_common_methods.sv)
+         File: i2c_cfg  (src/i2c/i2c_cfg.sv)
          File: i2c_monitor  (no auto-title, src/i2c/i2c_monitor.sv)
          File: i2c_sequence_item  (src/i2c/i2c_sequence_item.sv)
-         File: i2c_slave_driver  (src/i2c/i2c_slave_driver.sv)
-         }  # Group: Agent Components
+         }  # Group: Common Objects
 
       }  # Group: I2C Package
 
@@ -66,7 +87,7 @@ Group: I2C Agent  {
 
    File: I2C Package Integration  (docs/src/i2c/i2c_integration.txt)
    File: I2C Release Notes  (src/i2c/release_notes.txt)
-   }  # Group: I2C Agent
+   }  # Group: I2C Agents
 
 Group: Index  {
 
@@ -79,5 +100,6 @@ Group: Index  {
    Package Index: Packages
    Constraint Index: Constraints
    Interface Index: Interfaces
+   Macro Index: Macros
    }  # Group: Index
 

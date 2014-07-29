@@ -1,16 +1,22 @@
 Development Release 01-12-2008 (1.35 base)
 SystemVerilog
-/home/dovs/open_source/cores/src/i2c/i2c_sequence_item.sv	1401301429	1	i2c_sequence_item
+/home/dovs/open_source/cores/src/i2c/i2c_master_cfg.sv	1406619829	1	i2c_master_cfg
+/home/dovs/open_source/cores/src/i2c/i2c_sequence_item.sv	1406619829	1	i2c_sequence_item
+/home/dovs/open_source/cores/src/i2c/i2c_common_methods.sv	1406619829	1	i2c_common_methods
+/home/dovs/open_source/cores/src/i2c/i2c_master_agent.sv	1406619829	1	i2c_master_agent
 /home/dovs/open_source/cores/LICENSE.txt	1400075837	0	/home/dovs/open_source/cores/LICENSE.txt
-/home/dovs/open_source/cores/src/i2c/i2c_package.sv	1401301429	1	i2c_package
-/home/dovs/open_source/cores/docs/src/i2c/i2c_integration.txt	1400654768	1	I2C Package Integration
-/home/dovs/open_source/cores/src/i2c/i2c_monitor.sv	1401301429	1	i2c_monitor
-/home/dovs/open_source/cores/src/i2c/release_notes.txt	1400654612	1	I2C Release Notes
-/home/dovs/open_source/cores/src/i2c/i2c_slave_driver.sv	1401301429	1	i2c_slave_driver
-/home/dovs/open_source/cores/src/i2c/i2c_agent.sv	1401301429	1	i2c_agent
-/home/dovs/open_source/cores/src/i2c/i2c_cfg.sv	1401301429	1	i2c_cfg
-/home/dovs/open_source/cores/src/i2c/i2c_if.sv	1401301429	1	i2c_if
-/home/dovs/open_source/cores/src/i2c/i2c_sequence.sv	1401301429	0	/home/dovs/open_source/cores/src/i2c/i2c_sequence.sv
-/home/dovs/open_source/cores/src/i2c/i2c_cfg_basic_constrainted.sv	1401301429	0	/home/dovs/open_source/cores/src/i2c/i2c_cfg_basic_constrainted.sv
-/home/dovs/open_source/cores/README.txt	1401217972	0	/home/dovs/open_source/cores/README.txt
-/home/dovs/open_source/cores/docs/src/i2c/i2c_getting_started.txt	1400427005	1	Getting Started With I2C
+/home/dovs/open_source/cores/src/i2c/i2c_slave_agent.sv	1406619829	1	i2c_slave_agent
+/home/dovs/open_source/cores/src/i2c/i2c_package.sv	1406619829	1	i2c_package
+/home/dovs/open_source/cores/src/i2c/i2c_master_driver.sv	1406619829	1	i2c_master_driver
+/home/dovs/open_source/cores/src/i2c/i2c_monitor.sv	1406619829	1	i2c_monitor
+/home/dovs/open_source/cores/src/i2c/release_notes.txt	1406575732	1	I2C Release Notes
+/home/dovs/open_source/cores/src/i2c/i2c_slave_driver.sv	1406619829	1	i2c_slave_driver
+/home/dovs/open_source/cores/src/i2c/i2c_if.sv	1406619829	1	i2c_if
+/home/dovs/open_source/cores/docs/src/i2c/i2c_getting_started.txt	1406530575	1	Getting Started With I2C
+/home/dovs/open_source/cores/src/i2c/master_sequences/i2c_sequence_package.sv	1406619829	1	i2c_sequence_package
+/home/dovs/open_source/cores/src/i2c/i2c_slave_cfg.sv	1406619829	1	i2c_slave_cfg
+/home/dovs/open_source/cores/src/i2c/master_sequences/i2c_basic_sequence.sv	1406619829	1	i2c_basic_sequence
+/home/dovs/open_source/cores/src/i2c/master_sequences/i2c_base_sequence.sv	1406619829	1	i2c_base_sequence
+/home/dovs/open_source/cores/docs/src/i2c/i2c_integration.txt	1406530820	1	I2C Package Integration
+/home/dovs/open_source/cores/src/i2c/i2c_cfg.sv	1406619829	1	i2c_cfg
+/home/dovs/open_source/cores/README.txt	1406060031	0	/home/dovs/open_source/cores/README.txt

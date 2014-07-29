@@ -25,6 +25,7 @@ class i2c_monitor extends uvm_monitor;
   i2c_cfg                                 cfg;
 	virtual i2c_if                          sigs;
 	uvm_analysis_port #(i2c_sequence_item)  analysis_port;
+  i2c_common_methods                      common_mthds;
   
   event start_detection_e;
   event stop_detection_e;
@@ -34,8 +35,6 @@ class i2c_monitor extends uvm_monitor;
 	extern         function      new(string name, uvm_component parent);
 	extern virtual function void build_phase(uvm_phase phase);
 	extern virtual task          run_phase(uvm_phase phase);
-  extern virtual task          search_for_start_condition();
-  extern virtual task          search_for_stop_condition();
 
 	endclass: i2c_monitor
 	
@@ -56,8 +55,11 @@ function void i2c_monitor::build_phase(uvm_phase phase);
   
   phase.raise_objection(this);
   
-  if ( cfg  == null ) `uvm_fatal("DRV",  $sformatf("i2c cfg object is null!") )
+  if ( cfg  == null ) `uvm_fatal(get_type_name(),  $sformatf("i2c cfg object is null!") )
   this.analysis_port = new("analysis_port", this);
+  
+  common_mthds = i2c_common_methods::type_id::create("common_mthds", this);
+  common_mthds.sigs = sigs;
   
   phase.drop_objection(this);
   
@@ -75,8 +77,8 @@ task i2c_monitor::run_phase(uvm_phase phase);
   super.run_phase(phase);
   
   fork
-    forever search_for_start_condition();
-    forever search_for_stop_condition();
+    forever common_mthds.monitor_for_start_condition( .start_e(start_detection_e) );
+    forever common_mthds.monitor_for_stop_condition(  .stop_e(stop_detection_e) );
     
     forever begin
       fork
@@ -126,34 +128,11 @@ task i2c_monitor::run_phase(uvm_phase phase);
       
       thread_number++; // increment the thread number for next thread spawning
 
-      `uvm_info("MON",  $sformatf("%s", s_item.sprint() ), UVM_HIGH )
+      `uvm_info(get_type_name(),  $sformatf("%s", s_item.sprint() ), UVM_HIGH )
       analysis_port.write(s_item);
     end
   join
         
 endtask: run_phase	
-
-//------------------------------------------------------------------------//
-task i2c_monitor::search_for_start_condition();
-  
-  @(negedge sigs.mon_cb.sda_in);
-  if (sigs.mon_cb.scl_in === 1'b1) begin
-    ->start_detection_e;
-    `uvm_info("MON",  $sformatf("Start detected"), UVM_DEBUG )
-  end
-  
-endtask: search_for_start_condition
-
-//------------------------------------------------------------------------//
-task i2c_monitor::search_for_stop_condition();
-  
-  wait(sigs.mon_cb.sda_in !== 1'bx); // don't trigger from an X to 1 transition
-  @(posedge sigs.mon_cb.sda_in);
-  if (sigs.mon_cb.scl_in === 1'b1) begin
-    ->stop_detection_e;
-    `uvm_info("MON",  $sformatf("Stop detected"), UVM_DEBUG )
-  end
-  
-endtask: search_for_stop_condition
 
 `endif //I2C_MONITOR__SV

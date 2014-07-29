@@ -18,27 +18,28 @@
 `define I2C_SLAVE_DRIVER__SV
 
 // Class: i2c_slave_driver
-// Slave driver waits for a master to begin a transaction and responds 
-// in accordance with the current configuration defined in <i2c_cfg>. 
+// Slave driver waits for a transaction to begin on the interface and responds 
+// in accordance with the <i2c_slave_cfg> configuration object members values. 
 class i2c_slave_driver extends uvm_driver #(i2c_sequence_item);
 
   
-  virtual i2c_if  sigs;
-  i2c_cfg         cfg;
+  virtual i2c_if      sigs;
+  i2c_slave_cfg       cfg;
+  i2c_common_methods  common_mthds;
   
-  logic [9:0]     address;
-  bit   [7:0]     data[int]; //associative array so it can be allocated on the fly
-  bit             start_detection;
-  
-  event           start_detection_e;
-  event           stop_detection_e;
+  int                 number_of_clocks_for_t_hd_dat_max;
+  logic [9:0]         address;
+  bit   [7:0]         data[int]; //associative array so it can be allocated on the fly
+  bit                 start_detection;
+      
+  event               start_detection_e;
+  event               stop_detection_e;
   
   `uvm_component_utils(i2c_slave_driver)
   
   extern         function       new(string name, uvm_component parent);
   extern virtual function void  build_phase(uvm_phase phase);
   extern virtual task           run_phase(uvm_phase phase);
-  extern virtual task           drive_x_to_outputs_during_reset();
   extern virtual task           slave_search_for_start_condition(uvm_phase phase);
   extern virtual task           slave_search_for_stop_condition(uvm_phase phase);
   extern virtual task           slave_address_is_to_this_slave(output logic address_is_for_salve);
@@ -47,7 +48,7 @@ class i2c_slave_driver extends uvm_driver #(i2c_sequence_item);
   extern virtual task           slave_write_request();
   extern virtual task           slave_read_request();
   extern virtual task           wait_for_ack_from_master(output bit ack);
-  extern virtual task           wait_for_scl_negedge_plus_n_cycles();
+  extern virtual task           wait_for_scl_negedge_plus_t_hd_dat_max();
 
   endclass: i2c_slave_driver
   
@@ -65,8 +66,10 @@ function void i2c_slave_driver::build_phase(uvm_phase phase);
   
   phase.raise_objection(this);
   
-  if ( cfg  == null ) `uvm_fatal("DRV",  $sformatf("i2c cfg object is null!") )
+  if ( cfg  == null ) `uvm_fatal(get_type_name(),  $sformatf("i2c cfg object is null!") )
   
+  common_mthds = i2c_common_methods::type_id::create("common_mthds", this);
+  common_mthds.sigs = sigs;
   phase.drop_objection(this);
   
 endfunction: build_phase
@@ -82,8 +85,12 @@ task i2c_slave_driver::run_phase(uvm_phase phase);
   super.run_phase(phase);
   start_detection = 1'b0; 
   
+  // setup and calculate values which need to computed once per simulation
+  common_mthds.calculate_input_clock_period();
+  number_of_clocks_for_t_hd_dat_max = common_mthds.calculate_number_of_clocks_for_time( .time_value(cfg.t_hd_dat_max) );
+  
   fork
-    forever drive_x_to_outputs_during_reset();
+    forever common_mthds.drive_x_to_outputs_during_reset();
     forever slave_search_for_start_condition( .phase(phase) );
     forever slave_search_for_stop_condition(  .phase(phase) );
     forever begin
@@ -101,7 +108,7 @@ task i2c_slave_driver::run_phase(uvm_phase phase);
             case (transaction_direction)
               I2C_DIR_WRITE : slave_write_request();
               I2C_DIR_READ  : slave_read_request();
-              default   : `uvm_fatal("DRV",  $sformatf("Slave read / write request unknown!") )
+              default   : `uvm_fatal(get_type_name(),  $sformatf("Slave read / write request unknown!") )
             endcase
           end
         end
@@ -127,45 +134,24 @@ task i2c_slave_driver::run_phase(uvm_phase phase);
 endtask: run_phase
 
 //------------------------------------------------------------------------//
-// during reset, drive X to outputs to verify there isn't X propagation
-// while reset is asserted. 
-// This isn't being sent through a clocking block since the
-// reset is asynchronous and there is no guarantee the clock is toggling
-task i2c_slave_driver::drive_x_to_outputs_during_reset();
-  
-  @(negedge sigs.resetn);
-  sigs.scl_out <= 'x;
-  sigs.sda_out <= 'x;
-  
-  @(posedge sigs.resetn);
-  sigs.scl_out <= 1'b1;
-  sigs.sda_out <= 1'b1;
-  
-endtask:drive_x_to_outputs_during_reset
-
-//------------------------------------------------------------------------//
 task i2c_slave_driver::slave_search_for_start_condition(uvm_phase phase);
   
-  @(negedge sigs.drv_cb.sda_in);
-  if (sigs.drv_cb.scl_in === 1'b1) begin
-    ->start_detection_e;
+  common_mthds.monitor_for_start_condition( .start_e(start_detection_e) );
+  if(start_detection_e.triggered) begin
     start_detection = 1'b1;
     phase.raise_objection(this);
-    `uvm_info("DRV",  $sformatf("Start detected"), UVM_MEDIUM )
+    `uvm_info(get_type_name(),  $sformatf("Start detected"), UVM_MEDIUM )
   end
   
 endtask: slave_search_for_start_condition
 
 //------------------------------------------------------------------------//
 task i2c_slave_driver::slave_search_for_stop_condition(uvm_phase phase);
-
-  wait(sigs.drv_cb.sda_in !== 1'bx); // don't trigger from an X to 1 transition
-  @(posedge sigs.drv_cb.sda_in);
-  if (sigs.drv_cb.scl_in === 1'b1) begin
-    ->stop_detection_e;
-    `uvm_info("DRV",  $sformatf("Stop detected"), UVM_MEDIUM )
+  common_mthds.monitor_for_stop_condition( .stop_e(stop_detection_e) );
+  if(stop_detection_e.triggered) begin
+    `uvm_info(get_type_name(),  $sformatf("Stop detected"), UVM_MEDIUM )
     if(start_detection) begin // verify a start was triggered before lowering the objection
-      `uvm_info("DRV",  $sformatf("Start existed, drop objection"), UVM_DEBUG )
+      `uvm_info(get_type_name(),  $sformatf("Start existed, drop objection"), UVM_FULL )
       start_detection = 1'b0;
       phase.drop_objection(this);
     end
@@ -178,7 +164,7 @@ task i2c_slave_driver::slave_address_is_to_this_slave(output logic address_is_fo
 
   address               = '0;
   address_is_for_salve  =  0; 
-  `uvm_info("DRV",  $sformatf("Beginning address identification"), UVM_MEDIUM )
+  `uvm_info(get_type_name(),  $sformatf("Beginning address identification"), UVM_MEDIUM )
   
   // get address
   for(int i = 0; i < cfg.address_num_of_bits; i++)begin
@@ -202,7 +188,7 @@ endtask: slave_get_read_write
 task i2c_slave_driver::slave_write_request();
   logic [7:0] input_data      = '0;
   int         num_of_accesses =  0;
-  `uvm_info("DRV",  $sformatf("Slave write"), UVM_DEBUG )
+  `uvm_info(get_type_name(),  $sformatf("Slave write"), UVM_FULL )
   
   while(num_of_accesses <= cfg.max_write_word_access_before_nack) begin
     input_data = '0;
@@ -222,21 +208,21 @@ task i2c_slave_driver::slave_read_request();
   int       current_address   = this.address; // start of read address is the requested address on the i2c bus
   bit [7:0] data_to_transmit  = '0;
   bit       ack_from_master   = '0;
-  `uvm_info("DRV",  $sformatf("Slave read"), UVM_DEBUG )
+  `uvm_info(get_type_name(),  $sformatf("Slave read"), UVM_FULL )
   
   do begin
     if (!data.exists(current_address)) begin
       data[current_address] = $urandom_range(1 << 8); // data values are byte wide
-      `uvm_info("DRV",  $sformatf("Created a random value %0h for address %0h", data[current_address], current_address), UVM_HIGH )
+      `uvm_info(get_type_name(),  $sformatf("Created a random value %0h for address %0h", data[current_address], current_address), UVM_HIGH )
     end
     
     data_to_transmit = data[current_address];
-    `uvm_info("DRV",  $sformatf("transmitting read request data %0h", data_to_transmit), UVM_HIGH )
+    `uvm_info(get_type_name(),  $sformatf("transmitting read request data %0h", data_to_transmit), UVM_HIGH )
     
     //TX to master the data requested by the read request
     for (int i = 8; i; i--) begin
       sigs.drv_cb.sda_out <= data_to_transmit[i - 1];
-      wait_for_scl_negedge_plus_n_cycles();
+      wait_for_scl_negedge_plus_t_hd_dat_max();
     end
     sigs.drv_cb.sda_out <= 1'b1; // done transmitting read request, release the SDA
     
@@ -249,10 +235,10 @@ endtask: slave_read_request
 
 //------------------------------------------------------------------------//
 task i2c_slave_driver::send_ack();
-  wait_for_scl_negedge_plus_n_cycles();
+  wait_for_scl_negedge_plus_t_hd_dat_max();
   sigs.drv_cb.sda_out <= 1'b0;
   
-  wait_for_scl_negedge_plus_n_cycles();
+  wait_for_scl_negedge_plus_t_hd_dat_max();
   sigs.drv_cb.sda_out <= 1'b1;
 endtask: send_ack
 
@@ -260,17 +246,17 @@ endtask: send_ack
 task i2c_slave_driver::wait_for_ack_from_master(output bit ack);
   @(posedge sigs.drv_cb.scl_in);
   ack = ~ (sigs.drv_cb.sda_in); // ack = 0, nack = 1
-  `uvm_info("DRV",  $sformatf("received ACK from master %0h", sigs.drv_cb.sda_in), UVM_DEBUG )
+  `uvm_info(get_type_name(),  $sformatf("received ACK from master %0h", sigs.drv_cb.sda_in), UVM_FULL )
   
-  wait_for_scl_negedge_plus_n_cycles();
+  wait_for_scl_negedge_plus_t_hd_dat_max();
 endtask: wait_for_ack_from_master
 
 //------------------------------------------------------------------------//
-task i2c_slave_driver::wait_for_scl_negedge_plus_n_cycles();
+task i2c_slave_driver::wait_for_scl_negedge_plus_t_hd_dat_max();
   @(negedge sigs.drv_cb.scl_in);
-  repeat(cfg.wait_cycles_from_scl_negedge) @(sigs.drv_cb);
+  repeat(number_of_clocks_for_t_hd_dat_max) @(sigs.drv_cb);
   
-endtask: wait_for_scl_negedge_plus_n_cycles
+endtask: wait_for_scl_negedge_plus_t_hd_dat_max
 
 `endif //I2C_SLAVE_DRIVER__SV
 

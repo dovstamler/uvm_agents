@@ -18,9 +18,10 @@
 `define I2C_SEQUENCE_ITEM__SV
       
 // class: i2c_sequence_item
-// The I2C sequence item packages a full I2C transmission request.
-// Each item completes when either an I2C stop request or a 
-// repeated start is monitored. 
+// The I2C sequence item encapsulates an entire transaction including
+// multiple transmitted / received words for a single address request.
+// A transaction begins with a start condition and ends with either
+// a stop condition or a repeated start condition.
 class i2c_sequence_item extends uvm_sequence_item;
   
   // variable: direction_e
