@@ -1,9 +1,5 @@
 Title: Getting Started With I2C
 
-This document contains information regarding the classes, functions, 
-members, definitions and constraints of this open source I2C UVM package. 
-Familiarity with UVM is a prerequisite for integration and usage of this package.
-
 _Initial Integration_ -
 Please follow the instructions in the <I2C Package Integration> description. 
 

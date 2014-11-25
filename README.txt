@@ -20,18 +20,23 @@ Agents are implemented with the SystemVerilog 1800-2012 standard and the UVM met
 
 Cores highlights:
 
+- All cores were implemented with the UVM-1.1d framework.
+
 I2C: 
 - Master & slave agents.
 - Compatible to the Philips standard. (http://www.nxp.com/documents/user_manual/UM10204.pdf)
-- Implemented with UVM-1.1d framework.
 - Agents Support 7 bit addressing & continuous start.
-- Master agent also supports clock stretching and arbitration functionality. 
+- Master agent additionally supports clock stretching and arbitration functionality. 
 - Slave agent was tested against the I2C opencore RTL (http://opencores.org/project,i2c)
-  
+
+Wishbone:
+- Master agent.
+- Compatible to the Wishbone B3 standard. (http://cdn.opencores.org/downloads/wbspec_b3.pdf)
+- Agent is parametrized to support configurable bus widths
+
 Documentation: 
 - References to integrating and modifying cores can be found in the 
   documentation provided. Please see the Cores_Documentation.html.
 
 Release Notes:
 - Release notes for each core can be found at: src/<core name>/release_notes.txt
-

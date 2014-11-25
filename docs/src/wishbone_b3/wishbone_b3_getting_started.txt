@@ -1,0 +1,12 @@
+Title: Getting Started With Wishbone B3
+
+_Initial Integration_ -
+Please follow the instructions in the <Wishbone B3 Package Integration> description. 
+
+_Working with the Wishbone B3 Agent_ -
+Review the <wishbone_b3_sequence_item> to understand how a Wishbone transaction is encapsulated by this agent. 
+The configuration object is preset to create an active agent by default. Review the <wishbone_b3_master_cfg> members in order
+to modify an agent to a passive mode. 
+
+_Release Notes_ -
+Please review the <Wishbone B3 Release Notes> for updates and limitations of the agents.

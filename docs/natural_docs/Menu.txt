@@ -40,19 +40,21 @@ Timestamp: Generated on month day, year
 # --------------------------------------------------------------------------
 
 
+File: Introduction  (no auto-title, docs/src/common/introduction.txt)
+
 Group: I2C Agents  {
 
    File: Getting Started With I2C  (docs/src/i2c/i2c_getting_started.txt)
 
    Group: I2C Package  {
 
-      File: i2c_package  (no auto-title, src/i2c/i2c_package.sv)
+      File: i2c package  (no auto-title, src/i2c/i2c_package.sv)
 
       Group: Master Agent  {
 
-         File: i2c_master_agent  (src/i2c/i2c_master_agent.sv)
-         File: i2c_master_cfg  (no auto-title, src/i2c/i2c_master_cfg.sv)
-         File: i2c_master_driver  (src/i2c/i2c_master_driver.sv)
+         File: i2c master agent  (no auto-title, src/i2c/i2c_master_agent.sv)
+         File: i2c master cfg  (no auto-title, src/i2c/i2c_master_cfg.sv)
+         File: i2c master driver  (no auto-title, src/i2c/i2c_master_driver.sv)
 
          Group: Sequence Package  {
 
@@ -88,6 +90,45 @@ Group: I2C Agents  {
    File: I2C Package Integration  (docs/src/i2c/i2c_integration.txt)
    File: I2C Release Notes  (src/i2c/release_notes.txt)
    }  # Group: I2C Agents
+
+Group: Wishbone B3 Agents  {
+
+   File: Getting Started With Wishbone B3  (docs/src/wishbone_b3/wishbone_b3_getting_started.txt)
+
+   Group: Wishbone B3 Package  {
+
+      File: wishbone b3 package  (no auto-title, src/wishbone_b3/wishbone_b3_package.sv)
+
+      Group: Master Agent  {
+
+         File: wishbone b3 master agent  (no auto-title, src/wishbone_b3/wishbone_b3_master_agent.sv)
+         File: wishbone b3 master cfg  (no auto-title, src/wishbone_b3/wishbone_b3_master_cfg.sv)
+         File: wishbone b3 master driver  (no auto-title, src/wishbone_b3/wishbone_b3_master_driver.sv)
+
+         Group: Master Sequences  {
+
+            File: wishbone b3 master base sequence  (no auto-title, src/wishbone_b3/master_sequences/wishbone_b3_master_base_sequence.sv)
+            }  # Group: Master Sequences
+
+         }  # Group: Master Agent
+
+      Group: Common Objects  {
+
+         File: wishbone b3 sequence item  (no auto-title, src/wishbone_b3/wishbone_b3_sequence_item.sv)
+         File: wishbone b3 monitor  (no auto-title, src/wishbone_b3/wishbone_b3_monitor.sv)
+         File: wishbone b3 reg adapter  (no auto-title, src/wishbone_b3/wishbone_b3_reg_adapter.sv)
+         }  # Group: Common Objects
+
+      }  # Group: Wishbone B3 Package
+
+   Group: Wishbone B3 Interface  {
+
+      File: wishbone b3 if  (no auto-title, src/wishbone_b3/wishbone_b3_if.sv)
+      }  # Group: Wishbone B3 Interface
+
+   File: Wishbone B3 Package Integration  (docs/src/wishbone_b3/wishbone_b3_integration.txt)
+   File: Wishbone B3 Release Notes  (src/wishbone_b3/release_notes.txt)
+   }  # Group: Wishbone B3 Agents
 
 Group: Index  {
 

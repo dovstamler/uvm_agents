@@ -1,0 +1,18 @@
+Title: Wishbone B3 Release Notes
+
+_Version: 1.0_
+
+Supported Functionality: 
+- Master agent
+- Agent is parametrized for  address, data and tag bus widths
+
+Framework:
+- Implementation tested with the UVM-1.1d framework.
+
+Unimplemented Features:
+- Tag signals have no implementation
+- Response ERROR and response RETRY are unimplemented and are treated as response OK. 
+
+Testing:
+- Master agent was connected and tested against the I2C opencore RTL found at
+  http://opencores.org/project,i2c

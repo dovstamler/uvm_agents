@@ -1,0 +1,67 @@
+Title: Wishbone B3 Package Integration
+
+The following describes the steps needed to integrate the Wishbone B3 package into 
+a working environment.
+
+_Wishbone B3 Interface Instance and Binding_: see <wishbone_b3_if> for the interface instance and binding coding example.
+
+_Package Import_: The Wishbone package contains all of the declarations needed to 
+instantiate and use an Wishbone agent. Import the package into the working environment.
+(start code)
+import wishbone_b3_package::*;
+(end code)
+
+_Agents Instantiation in an Environment_: Instantiating  
+Wishbone agent objects requires the following:
+
+Parameter Definition - Make sure to parametrize the Wishbone virtual interface and the Wishbone agent with the same values.
+
+Virtual Interface - Define the Wishbone virtual interface and retrieve the pointer.
+
+Agents Configuration Object - Configuration object creation and randomization is done in the build phase. All configuration object members
+are "soft" constrainted to default values allowing the integrator to easily override constraints to the environments needs.  
+
+Creating the Agent Object - Create a parametrized agent object in the build phase. 
+Pass to the agent by reference the parametrized Wishbone virtual interface and the Wishbone configuration object. 
+
+RAL Adapter - When using this agent for Register Abstraction Layer access, a RAL adapter needs to be connected to the agent. 
+Create and connect the RAL adapter in the connect phase. 
+ 
+Connecting Agent to a Scoreboard (optional) - In the connect phase, connect the agents
+analysis port to your scoreboard.
+
+(start code)
+class env extends uvm_env;
+ .
+ .
+ virtual wishbone_b3_if   #( .ADR_W(`WB_ADDRESS_WIDTH), .DAT_W(`WB_DATA_WIDTH), .TAG_W(`WB_TAG_WIDTH)  )  wb_sigs;
+ wishbone_b3_master_agent #( .ADR_W(`WB_ADDRESS_WIDTH), .DAT_W(`WB_DATA_WIDTH), .TAG_W(`WB_TAG_WIDTH)  )  wb_master_agnt;
+ wishbone_b3_reg_adapter  #( .ADR_W(`WB_ADDRESS_WIDTH),  .DAT_W(`WB_DATA_WIDTH), .TAG_W(`WB_TAG_WIDTH)  ) wb_b3_reg_adapter;
+ .
+ .
+ 
+function void build_phase(uvm_phase phase);
+ .
+ .
+ if (!uvm_config_db#(virtual  wishbone_b3_if #(.ADR_W(`WB_ADDRESS_WIDTH), .DAT_W(`WB_DATA_WIDTH), .TAG_W(`WB_TAG_WIDTH) ))::get(null, "uvm_test_top", "wb_sigs", wb_sigs))
+    `uvm_fatal("CFGERR", "wishbone_b3_if interface not set");
+ 
+ wb_master_agnt = wishbone_b3_master_agent#( .ADR_W(`WB_ADDRESS_WIDTH),  .DAT_W(`WB_DATA_WIDTH), .TAG_W(`WB_TAG_WIDTH) )::type_id::create("wb_master_agnt", this);
+ wb_master_agnt.cfg  = cfg.wb_master_cfg; // configuration object is created and passed from the environment configuration object
+ wb_master_agnt.sigs = wb_sigs;
+ .
+ .
+endfunction 
+
+function void connect_phase(uvm_phase phase);
+  .
+  .
+  wb_master_agnt.analysis_port.connect(sb.predict_stream.analysis_export);
+  
+  // connect RAL accessibility to this port
+  wb_b3_reg_adapter = wishbone_b3_master_agent #( .ADR_W(`WB_ADDRESS_WIDTH),  .DAT_W(`WB_DATA_WIDTH), .TAG_W(`WB_TAG_WIDTH) )::type_id::create("wb_b3_reg_adapter");
+  regmodel.default_map.set_sequencer(wb_master_agnt.seqr, wb_b3_reg_adapter);
+  .
+  .
+endfunction
+(end code)
