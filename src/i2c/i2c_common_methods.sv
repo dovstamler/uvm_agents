@@ -67,7 +67,7 @@ endtask: calculate_input_clock_period
 // and 1 more clock cycle will be added to the calculation.
 function int i2c_common_methods::calculate_number_of_clocks_for_time( realtime time_value, bit floor_calculation = 1 );
   int retval;
-  if (input_clock_period_in_ps == 0) `uvm_error("COMMON", $sformatf("variable input_clock_period_in_ps = %t", input_clock_period_in_ps) )
+  if (input_clock_period_in_ps == 0) `uvm_error(get_type_name(), $sformatf("variable input_clock_period_in_ps = %t", input_clock_period_in_ps) )
   
   time_value = time_value / 1ps; // normalize to 1ps resolution
   retval = (time_value / input_clock_period_in_ps);
@@ -99,14 +99,20 @@ endtask:drive_x_to_outputs_during_reset
 task i2c_common_methods::monitor_for_start_condition( ref event start_e );
   wait(sigs.drv_cb.sda_in !== 1'bx); // don't trigger from an X to 0 transition
   @(negedge sigs.drv_cb.sda_in);
-  if (sigs.drv_cb.scl_in === 1'b1) ->start_e;
+  if (sigs.drv_cb.scl_in === 1'b1) begin
+    ->start_e;
+    sigs.bus_state_ascii = "START";
+  end
 endtask: monitor_for_start_condition
 
 //------------------------------------------------------------------------//
 task i2c_common_methods::monitor_for_stop_condition( ref event stop_e );
   wait(sigs.drv_cb.sda_in !== 1'bx); // don't trigger from an X to 1 transition
   @(posedge sigs.drv_cb.sda_in);
-  if (sigs.drv_cb.scl_in === 1'b1) ->stop_e;
+  if (sigs.drv_cb.scl_in === 1'b1) begin
+    ->stop_e;
+    sigs.bus_state_ascii = "STOP";
+  end
 endtask: monitor_for_stop_condition
 
 `endif //I2C_COMMON_METHODS__SV

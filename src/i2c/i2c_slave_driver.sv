@@ -140,7 +140,7 @@ task i2c_slave_driver::slave_search_for_start_condition(uvm_phase phase);
   if(start_detection_e.triggered) begin
     start_detection = 1'b1;
     phase.raise_objection(this);
-    `uvm_info(get_type_name(),  $sformatf("Start detected"), UVM_MEDIUM )
+    `uvm_info(get_type_name(),  $sformatf("Start detected"), UVM_HIGH )
   end
   
 endtask: slave_search_for_start_condition
@@ -149,7 +149,7 @@ endtask: slave_search_for_start_condition
 task i2c_slave_driver::slave_search_for_stop_condition(uvm_phase phase);
   common_mthds.monitor_for_stop_condition( .stop_e(stop_detection_e) );
   if(stop_detection_e.triggered) begin
-    `uvm_info(get_type_name(),  $sformatf("Stop detected"), UVM_MEDIUM )
+    `uvm_info(get_type_name(),  $sformatf("Stop detected"), UVM_HIGH )
     if(start_detection) begin // verify a start was triggered before lowering the objection
       `uvm_info(get_type_name(),  $sformatf("Start existed, drop objection"), UVM_FULL )
       start_detection = 1'b0;
@@ -164,7 +164,7 @@ task i2c_slave_driver::slave_address_is_to_this_slave(output logic address_is_fo
 
   address               = '0;
   address_is_for_salve  =  0; 
-  `uvm_info(get_type_name(),  $sformatf("Beginning address identification"), UVM_MEDIUM )
+  `uvm_info(get_type_name(),  $sformatf("Beginning address identification"), UVM_HIGH )
   
   // get address
   for(int i = 0; i < cfg.address_num_of_bits; i++)begin

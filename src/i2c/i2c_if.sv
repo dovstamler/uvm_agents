@@ -18,31 +18,61 @@
 `define I2C_IF__SV
     
 // interface: i2c_if
-// Interface connecting the agent to an I2C SCL / SDA bus
+// Interface connecting the agent to an I2C SCL / SDA bus.
 //
 // Parameters: 
 //
 // clk    - i2c block input clock. Clocking blocks are dependent on this input.
+// sda    - i2c data  wire connected to the DUT sda pin 
+// scl    - i2c clock wire connected to the DUT scl pin 
 // (start code)
-// 
-// i2c_if i2c_sigs( .clk(clk) ); // interface instance
-// 
-// // connect the signals as a tri-state buffer to the SDA/SCL lines
-// assign sda_io          = (i2c_sigs.sda_out) ? 1'bz : i2c_sigs.sda_out;
-// assign i2c_sigs.sda_in = sda_io;
-// 
-// assign scl_io          = (i2c_sigs.scl_out) ? 1'bz : i2c_sigs.scl_out;
-// assign i2c_sigs.scl_in = scl_io;
+// tb();
+// .
+// .
+// // signals in the TB
+// wire sda;
+// wire scl;
+// .
+// .
+// // connect the bidirectional signals sda/scl to the DUT with the TB wires 
+// i2c_if i2c_sigs( .clk(clk), .scl(scl), .sda(sda) ); // interface instance
+// .
+// .
+// dut my_dut(.
+//            .
+//            .sda(sda),
+//            .scl(scl),
+//            .
+//           );
 //
+// .
+// .
+// endmodule: tb
 // (end code)
-interface i2c_if (input bit clk);
+interface i2c_if (input bit  clk,
+                  inout wire sda,
+                  inout wire scl
+                 );
   logic resetn; // used for i2c block level verification
-    
+
+  //----------------------------------------------------------------------//
+  // signals sampled/driven by the agents 
   logic sda_in;
   logic sda_out;
   logic scl_in;
   logic scl_out;
+  //----------------------------------------------------------------------//
+  /// connectivity between the agent and the physical pins
+  assign sda    = sda_out ? 1'bz : sda_out;
+  assign sda_in = sda;
   
+  assign scl    = scl_out ? 1'bz : scl_out;
+  assign scl_in = scl;
+
+  //----------------------------------------------------------------------//
+  logic [255:0] bus_state_ascii; // ASCII showing the recognized state of the bus
+
+  //----------------------------------------------------------------------//
   clocking drv_cb @(posedge clk);
       default input #1step output #1;
       

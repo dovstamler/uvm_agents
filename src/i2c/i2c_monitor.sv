@@ -92,26 +92,34 @@ task i2c_monitor::run_phase(uvm_phase phase);
           for(int i = 0; i < cfg.address_num_of_bits; i++)begin
             @(posedge sigs.mon_cb.scl_in);
             s_item.address = { s_item.address[8:0], sigs.mon_cb.sda_in };
+            sigs.bus_state_ascii = "ADDRESS";
           end 
  
           // read / write bit
           @(posedge sigs.mon_cb.scl_in);
           s_item.direction_e = e_i2c_direction'(sigs.mon_cb.sda_in); // cast received value to sequence item field enum
-          
+          if(s_item.direction_e == I2C_DIR_WRITE) sigs.bus_state_ascii = "WRITE";
+          else                                    sigs.bus_state_ascii = "READ";
+
           // continue only if current agent receives an ACK on the address.
           @(posedge sigs.mon_cb.scl_in);
           s_item.address_ack = sigs.mon_cb.sda_in;
+          if(s_item.address_ack == 1'b0) sigs.bus_state_ascii = "ACK";
+          else                           sigs.bus_state_ascii = "NACK";
           
           if (s_item.address_ack == 1'b0) begin // begin collecting data only if there was a slave response to the address
             while(data_ack === 1'b0) begin
               for (int i = 0; i < 8; i++) begin // data is always 8 bit
                 @(posedge sigs.mon_cb.scl_in);
                 data = { data[6:0], sigs.mon_cb.sda_in};
+                sigs.bus_state_ascii = "DATA";
               end
               s_item.data.push_back(data);
 
               @(posedge sigs.mon_cb.scl_in);
               data_ack = sigs.mon_cb.sda_in;
+              if(data_ack == 1'b0) sigs.bus_state_ascii = "ACK";
+              else                 sigs.bus_state_ascii = "NACK";
             end
           end
         end

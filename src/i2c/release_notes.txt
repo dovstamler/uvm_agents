@@ -1,5 +1,10 @@
 Title: I2C Release Notes
 
+_Version: 1.2_
+
+- Simplified interface connectivity
+- Added debug signal to the interface reporting current bus state
+
 _Version: 1.1_
 
 Supported Functionality: 
