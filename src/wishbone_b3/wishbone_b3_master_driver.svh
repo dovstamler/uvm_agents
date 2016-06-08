@@ -46,12 +46,8 @@ endfunction: new
 function void wishbone_b3_master_driver::build_phase(uvm_phase phase);
   super.build_phase(phase);
   
-  phase.raise_objection(this);
-  
   common_mthds      = wishbone_b3_common_methods #(.DAT_W(DAT_W), .ADR_W(ADR_W), .TAG_W(TAG_W))::type_id::create("common_mthds", this);
   common_mthds.sigs = sigs;
-  
-  phase.drop_objection(this);
   
 endfunction: build_phase
 
