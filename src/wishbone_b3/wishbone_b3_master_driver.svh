@@ -138,7 +138,7 @@ endtask: read_transaction
 // This isn't being sent through a clocking block since the
 // reset is asynchronous and there is no guarantee the clock is toggling
 task wishbone_b3_master_driver::drive_x_to_outputs_during_reset();
-  wait(sigs.rst_i === 1'b0);
+  wait(sigs.rst_i === 1'b1);
   sigs.dat_o = 'x;
   sigs.tgd_o = 'x;
   sigs.adr   = 'x;
@@ -150,7 +150,7 @@ task wishbone_b3_master_driver::drive_x_to_outputs_during_reset();
   sigs.tgc   = 'x;
   sigs.we    = 'x;
   
-  wait(sigs.rst_i === 1'b1);
+  wait(sigs.rst_i === 1'b0);
   sigs.dat_o = '0;
   sigs.tgd_o = '0;
   sigs.adr   = '0;
