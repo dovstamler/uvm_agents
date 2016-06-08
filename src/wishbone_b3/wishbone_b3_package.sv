@@ -52,13 +52,13 @@ package wishbone_b3_package;
     WB_B3_RESPONSE_ACK_RTY = 2
   } e_wishbone_b3_response;
 
-  `include "wishbone_b3_common_methods.sv"
-  `include "wishbone_b3_master_cfg.sv"
-  `include "wishbone_b3_sequence_item.sv"  
-  `include "wishbone_b3_master_driver.sv"
-  `include "wishbone_b3_monitor.sv"
-  `include "wishbone_b3_reg_adapter.sv"
-  `include "wishbone_b3_master_agent.sv"
+  `include "wishbone_b3_common_methods.svh"
+  `include "wishbone_b3_master_cfg.svh"
+  `include "wishbone_b3_sequence_item.svh"
+  `include "wishbone_b3_master_driver.svh"
+  `include "wishbone_b3_monitor.svh"
+  `include "wishbone_b3_reg_adapter.svh"
+  `include "wishbone_b3_master_agent.svh"
   
 endpackage: wishbone_b3_package
 
