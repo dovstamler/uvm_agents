@@ -84,7 +84,10 @@ endtask: run_phase
 //------------------------------------------------------------------------//
 task wishbone_b3_master_driver::write_transaction(td_wishbone_b3_sequence_item s_item);
   
-  //stating a cycle
+  // wait for inactive reset
+  wait(sigs.rst_i === 1'b0);
+  
+  // stating a cycle
   sigs.m_drv_cb.cyc <= 1'b1; 
   sigs.m_drv_cb.tgc <= '0; // cycle tag currently not supported
   
@@ -109,6 +112,9 @@ endtask: write_transaction
 
 //------------------------------------------------------------------------//
 task wishbone_b3_master_driver::read_transaction(td_wishbone_b3_sequence_item s_item);
+  // wait for inactive reset
+  wait(sigs.rst_i === 1'b0);
+  
   //stating a cycle
   sigs.m_drv_cb.cyc <= 1'b1; 
   sigs.m_drv_cb.tgc <= '0; // cycle tag currently not supported
