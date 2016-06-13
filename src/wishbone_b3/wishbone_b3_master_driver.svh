@@ -83,9 +83,11 @@ endtask: run_phase
 
 //------------------------------------------------------------------------//
 task wishbone_b3_master_driver::write_transaction(td_wishbone_b3_sequence_item s_item);
-  
   // wait for inactive reset
   wait(sigs.rst_i === 1'b0);
+  
+  // wait for free bus
+  wait(~sigs.m_drv_cb.ack & ~sigs.m_drv_cb.err & ~sigs.m_drv_cb.rty);
   
   // stating a cycle
   sigs.m_drv_cb.cyc <= 1'b1; 
@@ -114,6 +116,9 @@ endtask: write_transaction
 task wishbone_b3_master_driver::read_transaction(td_wishbone_b3_sequence_item s_item);
   // wait for inactive reset
   wait(sigs.rst_i === 1'b0);
+  
+  // wait for free bus
+  wait(~sigs.m_drv_cb.ack & ~sigs.m_drv_cb.err & ~sigs.m_drv_cb.rty);
   
   //stating a cycle
   sigs.m_drv_cb.cyc <= 1'b1; 
