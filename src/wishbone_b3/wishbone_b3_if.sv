@@ -65,6 +65,9 @@ interface wishbone_b3_if #(DAT_W  = 64, ADR_W  = 32, TAG_W  = 1) (input bit clk)
     //parameter ADR_W  = 32;       // address port width
     //parameter TAG_W  = 1;        // default tag widths are 1 bit
     
+    timeunit      1ns;
+    timeprecision 1ps;
+
     localparam SEL_W = (DAT_W/8); // 1 select bit per data byte, divide by 8 
     
     /// common signals ///
