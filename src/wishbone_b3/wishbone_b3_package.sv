@@ -13,6 +13,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //////////////////////////////////////////////////////////////////////////////
+//  Modifications:
+//      2016-06-08: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * file extensions renamed (.sv for compilable units, .svh for
+//            include-able units)
+//////////////////////////////////////////////////////////////////////////////
 
 `ifndef WISHBONE_B3_PACKAGE__SV
 `define WISHBONE_B3_PACKAGE__SV

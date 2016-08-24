@@ -13,6 +13,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //////////////////////////////////////////////////////////////////////////////
+//  Modifications:
+//      2016-06-08: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * removed constructs which seems not to be supported in UVM 1.2
+//          * fixed reset logic (WB_B3 Rule 2.30)
+//          * do not issue a transaction when reset is active
+//      2016-06-13: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * fixed beginning of transaction for closely successive operations
+//////////////////////////////////////////////////////////////////////////////
    
 `ifndef WISHBONE_B3_DRIVER__SV
 `define WISHBONE_B3_DRIVER__SV

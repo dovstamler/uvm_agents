@@ -13,6 +13,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //////////////////////////////////////////////////////////////////////////////
+//  Modifications:
+//      2016-06-08: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * removed constructs which seems not to be supported in UVM 1.2
+//////////////////////////////////////////////////////////////////////////////
 
 `ifndef WISHBONE_B3_MONITOR__SV
 `define WISHBONE_B3_MONITOR__SV

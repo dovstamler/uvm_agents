@@ -13,6 +13,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //////////////////////////////////////////////////////////////////////////////
+//  Modifications:
+//      2016-06-14: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * added get_type_name() and convert2string() methods; now this
+//            call is possible:
+//            $sformatf(
+//              "Transaction \"%s\" received: %s",
+//              t.get_type_name(), t.convert2string())
+//////////////////////////////////////////////////////////////////////////////
 
 `ifndef WISHBONE_B3_SEQUENCE_ITEM__SV
 `define WISHBONE_B3_SEQUENCE_ITEM__SV

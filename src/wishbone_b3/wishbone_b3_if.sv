@@ -13,6 +13,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //////////////////////////////////////////////////////////////////////////////
+//  Modifications:
+//      2016-08-11: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * added timeunit/timeprecision to WB interface
+//////////////////////////////////////////////////////////////////////////////
 
 `ifndef WISHBONE_B3_IF__SV
 `define WISHBONE_B3_IF__SV
