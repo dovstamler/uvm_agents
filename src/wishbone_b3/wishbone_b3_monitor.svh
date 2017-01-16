@@ -13,6 +13,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //////////////////////////////////////////////////////////////////////////////
+//  Modifications:
+//      2016-06-08: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * removed constructs which seems not to be supported in UVM 1.2
+//////////////////////////////////////////////////////////////////////////////
 
 `ifndef WISHBONE_B3_MONITOR__SV
 `define WISHBONE_B3_MONITOR__SV
@@ -49,13 +53,9 @@ endfunction: new
 function void wishbone_b3_monitor::build_phase(uvm_phase phase);
   super.build_phase(phase);
   
-  phase.raise_objection(this);
-  
   this.analysis_port = new("analysis_port", this);
   common_mthds      = wishbone_b3_common_methods #(.DAT_W(DAT_W), .ADR_W(ADR_W), .TAG_W(TAG_W))::type_id::create("common_mthds", this);
   common_mthds.sigs = sigs;
-  
-  phase.drop_objection(this);
   
 endfunction: build_phase
 

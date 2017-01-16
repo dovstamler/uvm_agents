@@ -13,6 +13,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //////////////////////////////////////////////////////////////////////////////
+//  Modifications:
+//      2016-06-08: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * removed constructs which seems not to be supported in UVM 1.2
+//          * fixed reset logic (WB_B3 Rule 2.30)
+//          * do not issue a transaction when reset is active
+//      2016-06-13: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * fixed beginning of transaction for closely successive operations
+//////////////////////////////////////////////////////////////////////////////
    
 `ifndef WISHBONE_B3_DRIVER__SV
 `define WISHBONE_B3_DRIVER__SV
@@ -46,12 +54,8 @@ endfunction: new
 function void wishbone_b3_master_driver::build_phase(uvm_phase phase);
   super.build_phase(phase);
   
-  phase.raise_objection(this);
-  
   common_mthds      = wishbone_b3_common_methods #(.DAT_W(DAT_W), .ADR_W(ADR_W), .TAG_W(TAG_W))::type_id::create("common_mthds", this);
   common_mthds.sigs = sigs;
-  
-  phase.drop_objection(this);
   
 endfunction: build_phase
 
@@ -87,8 +91,13 @@ endtask: run_phase
 
 //------------------------------------------------------------------------//
 task wishbone_b3_master_driver::write_transaction(td_wishbone_b3_sequence_item s_item);
+  // wait for inactive reset
+  wait(sigs.rst_i === 1'b0);
   
-  //stating a cycle
+  // wait for free bus
+  wait(~sigs.m_drv_cb.ack & ~sigs.m_drv_cb.err & ~sigs.m_drv_cb.rty);
+  
+  // stating a cycle
   sigs.m_drv_cb.cyc <= 1'b1; 
   sigs.m_drv_cb.tgc <= '0; // cycle tag currently not supported
   
@@ -113,6 +122,12 @@ endtask: write_transaction
 
 //------------------------------------------------------------------------//
 task wishbone_b3_master_driver::read_transaction(td_wishbone_b3_sequence_item s_item);
+  // wait for inactive reset
+  wait(sigs.rst_i === 1'b0);
+  
+  // wait for free bus
+  wait(~sigs.m_drv_cb.ack & ~sigs.m_drv_cb.err & ~sigs.m_drv_cb.rty);
+  
   //stating a cycle
   sigs.m_drv_cb.cyc <= 1'b1; 
   sigs.m_drv_cb.tgc <= '0; // cycle tag currently not supported
@@ -142,7 +157,7 @@ endtask: read_transaction
 // This isn't being sent through a clocking block since the
 // reset is asynchronous and there is no guarantee the clock is toggling
 task wishbone_b3_master_driver::drive_x_to_outputs_during_reset();
-  wait(sigs.rst_i === 1'b0);
+  wait(sigs.rst_i === 1'b1);
   sigs.dat_o = 'x;
   sigs.tgd_o = 'x;
   sigs.adr   = 'x;
@@ -154,7 +169,7 @@ task wishbone_b3_master_driver::drive_x_to_outputs_during_reset();
   sigs.tgc   = 'x;
   sigs.we    = 'x;
   
-  wait(sigs.rst_i === 1'b1);
+  wait(sigs.rst_i === 1'b0);
   sigs.dat_o = '0;
   sigs.tgd_o = '0;
   sigs.adr   = '0;
