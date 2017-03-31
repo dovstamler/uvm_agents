@@ -17,6 +17,8 @@
 //      2016-06-08: by Jan Pospisil (fosfor.software@seznam.cz)
 //          * file extensions renamed (.sv for compilable units, .svh for
 //            include-able units)
+//      2017-03-31: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * added transaction timeout
 //////////////////////////////////////////////////////////////////////////////
 
 `ifndef WISHBONE_B3_PACKAGE__SV
@@ -57,8 +59,8 @@ package wishbone_b3_package;
     WB_B3_RESPONSE_ACK_RTY = 2
   } e_wishbone_b3_response;
 
-  `include "wishbone_b3_common_methods.svh"
   `include "wishbone_b3_master_cfg.svh"
+  `include "wishbone_b3_common_methods.svh"
   `include "wishbone_b3_sequence_item.svh"
   `include "wishbone_b3_master_driver.svh"
   `include "wishbone_b3_monitor.svh"
