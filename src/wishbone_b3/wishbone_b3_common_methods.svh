@@ -52,6 +52,7 @@ task wishbone_b3_common_methods::wait_for_response(output e_wishbone_b3_response
    begin
      #cfg.timeout `uvm_error("WB_MON", "Transaction time-out!")
      response = WB_B3_RESPONSE_ACK_ERR;
+     @(sigs.m_drv_cb); // synchronize driver operations to the current clock
    end
   join_any
   disable fork;
