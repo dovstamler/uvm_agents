@@ -13,6 +13,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //////////////////////////////////////////////////////////////////////////////
+//  Modifications:
+//      2016-06-14: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * added get_type_name() and convert2string() methods; now this
+//            call is possible:
+//            $sformatf(
+//              "Transaction \"%s\" received: %s",
+//              t.get_type_name(), t.convert2string())
+//////////////////////////////////////////////////////////////////////////////
 
 `ifndef WISHBONE_B3_SEQUENCE_ITEM__SV
 `define WISHBONE_B3_SEQUENCE_ITEM__SV
@@ -53,7 +61,9 @@ class wishbone_b3_sequence_item #(ADR_W = 32, DAT_W = 64, TAG_W = 1) extends uvm
     `uvm_field_enum( e_wishbone_b3_response,  response_e,  UVM_ALL_ON)
   `uvm_object_utils_end
 
-  extern function  new(string name = "wishbone_b3_sequence_item");
+  extern function new(string name = "wishbone_b3_sequence_item");
+  extern function string get_type_name();
+  extern function string convert2string();
   
   extern constraint response_c;
   extern constraint select_c;
@@ -67,6 +77,25 @@ function wishbone_b3_sequence_item::new(string name = "wishbone_b3_sequence_item
   super.new(name);
 
 endfunction: new
+
+//------------------------------------------------------------------------//
+// function: get_type_name
+// override of super's method for parametrized class
+function string wishbone_b3_sequence_item::get_type_name();
+  return "wishbone_b3_sequence_item";
+
+endfunction 
+
+//------------------------------------------------------------------------//
+// function: convert2string
+// for custom displaying class content
+function string wishbone_b3_sequence_item::convert2string();
+  // convert2string = "TBD";
+  convert2string = $sformatf(
+    "direction_e = %s, address = 0x%H, data = 0x%H, select = 0b%B, response_e = %s",
+    direction_e.name(), address, data, select, response_e.name());
+
+endfunction
 
 //------------------------------------------------------------------------//
 // constraint: response_c
