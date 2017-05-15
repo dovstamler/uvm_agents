@@ -1,5 +1,10 @@
 Title: I2C Release Notes
 
+_Version: 1.3_
+
+- Removed objections from build phases
+- added timeunit to interface
+
 _Version: 1.2_
 
 - Simplified interface connectivity

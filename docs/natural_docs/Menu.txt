@@ -6,7 +6,7 @@ Title: Verification Cores
 # You can also add a sub-title to your menu like this:
 # SubTitle: [subtitle]
 
-Footer: Copyright 2014 Dov Stamler (dov.stamler@gmail.com)
+Footer: Copyright 2017 Dov Stamler (dov.stamler@gmail.com)
 Timestamp: Generated on month day, year
 #   m     - One or two digit month.  January is "1"
 #   mm    - Always two digit month.  January is "01"
@@ -56,12 +56,11 @@ Group: I2C Agents  {
          File: i2c master cfg  (no auto-title, src/i2c/i2c_master_cfg.sv)
          File: i2c master driver  (no auto-title, src/i2c/i2c_master_driver.sv)
 
-         Group: Sequence Package  {
+         Group: Master Sequences  {
 
-            File: i2c_sequence_package  (src/i2c/master_sequences/i2c_sequence_package.sv)
             File: i2c_base_sequence  (src/i2c/master_sequences/i2c_base_sequence.sv)
             File: i2c_basic_sequence  (src/i2c/master_sequences/i2c_basic_sequence.sv)
-            }  # Group: Sequence Package
+            }  # Group: Master Sequences
 
          }  # Group: Master Agent
 
@@ -101,9 +100,9 @@ Group: Wishbone B3 Agents  {
 
       Group: Master Agent  {
 
-         File: wishbone b3 master agent  (no auto-title, src/wishbone_b3/wishbone_b3_master_agent.sv)
-         File: wishbone b3 master cfg  (no auto-title, src/wishbone_b3/wishbone_b3_master_cfg.sv)
-         File: wishbone b3 master driver  (no auto-title, src/wishbone_b3/wishbone_b3_master_driver.sv)
+         File: wishbone b3 master agent  (no auto-title, src/wishbone_b3/wishbone_b3_master_agent.svh)
+         File: wishbone b3 master cfg  (no auto-title, src/wishbone_b3/wishbone_b3_master_cfg.svh)
+         File: wishbone b3 master driver  (no auto-title, src/wishbone_b3/wishbone_b3_master_driver.svh)
 
          Group: Master Sequences  {
 
@@ -114,9 +113,9 @@ Group: Wishbone B3 Agents  {
 
       Group: Common Objects  {
 
-         File: wishbone b3 sequence item  (no auto-title, src/wishbone_b3/wishbone_b3_sequence_item.sv)
-         File: wishbone b3 monitor  (no auto-title, src/wishbone_b3/wishbone_b3_monitor.sv)
-         File: wishbone b3 reg adapter  (no auto-title, src/wishbone_b3/wishbone_b3_reg_adapter.sv)
+         File: wishbone b3 sequence item  (no auto-title, src/wishbone_b3/wishbone_b3_sequence_item.svh)
+         File: wishbone b3 monitor  (no auto-title, src/wishbone_b3/wishbone_b3_monitor.svh)
+         File: wishbone b3 reg adapter  (no auto-title, src/wishbone_b3/wishbone_b3_reg_adapter.svh)
          }  # Group: Common Objects
 
       }  # Group: Wishbone B3 Package

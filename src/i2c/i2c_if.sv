@@ -53,6 +53,8 @@ interface i2c_if (input bit  clk,
                   inout wire sda,
                   inout wire scl
                  );
+  timeunit 1ns/1ps;
+  
   logic resetn; // used for i2c block level verification
 
   //----------------------------------------------------------------------//

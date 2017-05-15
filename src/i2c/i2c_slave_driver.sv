@@ -64,13 +64,10 @@ endfunction: new
 function void i2c_slave_driver::build_phase(uvm_phase phase);
   super.build_phase(phase);
   
-  phase.raise_objection(this);
-  
   if ( cfg  == null ) `uvm_fatal(get_type_name(),  $sformatf("i2c cfg object is null!") )
   
   common_mthds = i2c_common_methods::type_id::create("common_mthds", this);
   common_mthds.sigs = sigs;
-  phase.drop_objection(this);
   
 endfunction: build_phase
 

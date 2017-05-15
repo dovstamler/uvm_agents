@@ -1,5 +1,15 @@
 Title: Wishbone B3 Release Notes
 
+_Version: 1.1_
+
+Merged AakaFosfor pull request:
+- update of agents file name types
+- removal of UVM 1.2 un-compliant code
+- reset polarity fix
+- limit closely successive transactions
+- limit transaction initiates while agent is in reset
+
+
 _Version: 1.0_
 
 Supported Functionality: 

@@ -79,7 +79,7 @@ task wishbone_b3_master_driver::run_phase(uvm_phase phase);
       endcase
       
       `uvm_info(get_type_name(),  $sformatf("%s", req.sprint() ), UVM_HIGH )
-        seq_item_port.item_done(); // report to the sequencer that the item request has completed
+      seq_item_port.item_done(); // report to the sequencer that the item request has completed
       
       phase.drop_objection(this); // done transaction
     end
