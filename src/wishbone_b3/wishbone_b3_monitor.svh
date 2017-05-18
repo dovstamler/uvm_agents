@@ -66,7 +66,6 @@ task wishbone_b3_monitor::run_phase(uvm_phase phase);
   td_wishbone_b3_sequence_item s_item;
   super.run_phase(phase);
 
-  // no objections in the monitor
   forever begin
   
     // transaction begins when cyc_o (cycle) is asserted and the stb_o (phase) is asserted.

@@ -68,7 +68,6 @@ task wishbone_b3_master_driver::run_phase(uvm_phase phase);
   fork
     forever begin
       seq_item_port.get_next_item(req); 
-      phase.raise_objection(this); //don't allow the phase to finish if a transaction is in progress
       
       @(sigs.m_drv_cb); // synchronize driver operations to the current clock
         
@@ -81,7 +80,6 @@ task wishbone_b3_master_driver::run_phase(uvm_phase phase);
       `uvm_info(get_type_name(),  $sformatf("%s", req.sprint() ), UVM_HIGH )
       seq_item_port.item_done(); // report to the sequencer that the item request has completed
       
-      phase.drop_objection(this); // done transaction
     end
 
     forever drive_x_to_outputs_during_reset();
