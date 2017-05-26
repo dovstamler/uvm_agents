@@ -104,8 +104,8 @@ task i2c_monitor::run_phase(uvm_phase phase);
           else                           sigs.bus_state_ascii = "NACK";
           
           if (s_item.address_ack == 1'b0) begin // begin collecting data only if there was a slave response to the address
-            while(data_ack === 1'b0) begin
-              for (int i = 0; i < 8; i++) begin // data is always 8 bit
+             do begin // collect at least 1 word, data is always 8 bit
+              for (int i = 0; i < 8; i++) begin  
                 @(posedge sigs.mon_cb.scl_in);
                 data = { data[6:0], sigs.mon_cb.sda_in};
                 sigs.bus_state_ascii = "DATA";
@@ -117,6 +117,7 @@ task i2c_monitor::run_phase(uvm_phase phase);
               if(data_ack == 1'b0) sigs.bus_state_ascii = "ACK";
               else                 sigs.bus_state_ascii = "NACK";
             end
+            while(data_ack === 1'b0);
           end
         end
         

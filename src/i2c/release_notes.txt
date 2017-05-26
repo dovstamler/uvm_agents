@@ -1,5 +1,9 @@
 Title: I2C Release Notes
 
+_Version: 1.4_
+
+- fixed monitor halting when a continuous start is created after a read
+
 _Version: 1.3_
 
 - Removed objections from build phases
