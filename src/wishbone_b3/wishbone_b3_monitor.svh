@@ -16,6 +16,8 @@
 //  Modifications:
 //      2016-06-08: by Jan Pospisil (fosfor.software@seznam.cz)
 //          * removed constructs which seems not to be supported in UVM 1.2
+//      2017-03-31: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * added transaction timeout
 //////////////////////////////////////////////////////////////////////////////
 
 `ifndef WISHBONE_B3_MONITOR__SV
@@ -30,6 +32,7 @@ class wishbone_b3_monitor #(ADR_W = 32, DAT_W = 64, TAG_W = 1) extends uvm_monit
   typedef wishbone_b3_sequence_item #(.ADR_W(ADR_W), .DAT_W(DAT_W), .TAG_W(TAG_W)) td_wishbone_b3_sequence_item;
 
   virtual wishbone_b3_if            #(.DAT_W(DAT_W), .ADR_W(ADR_W), .TAG_W(TAG_W)) sigs;
+  wishbone_b3_master_cfg                                                           cfg;
   uvm_analysis_port                 #(td_wishbone_b3_sequence_item)                analysis_port;
   wishbone_b3_common_methods        #(.DAT_W(DAT_W), .ADR_W(ADR_W), .TAG_W(TAG_W)) common_mthds;
   
@@ -54,8 +57,13 @@ function void wishbone_b3_monitor::build_phase(uvm_phase phase);
   super.build_phase(phase);
   
   this.analysis_port = new("analysis_port", this);
+  
+  // get the configuration object
+  if(!uvm_config_db #(wishbone_b3_master_cfg)::get(this, "", "cfg", cfg)) `uvm_fatal(get_type_name(), "wishbone_b3_master_cfg config_db lookup failed")
+  
   common_mthds      = wishbone_b3_common_methods #(.DAT_W(DAT_W), .ADR_W(ADR_W), .TAG_W(TAG_W))::type_id::create("common_mthds", this);
   common_mthds.sigs = sigs;
+  common_mthds.cfg  = cfg;
   
 endfunction: build_phase
 

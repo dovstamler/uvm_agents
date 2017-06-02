@@ -13,6 +13,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //////////////////////////////////////////////////////////////////////////////
+//  Modifications:
+//      2017-03-31: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * added transaction timeout
+//////////////////////////////////////////////////////////////////////////////
 
 `ifndef WISHBONE_B3_COMMON_METHODS__SV
 `define WISHBONE_B3_COMMON_METHODS__SV
@@ -21,6 +25,7 @@ class wishbone_b3_common_methods #(ADR_W = 32, DAT_W = 64, TAG_W = 1) extends uv
   `uvm_object_param_utils( wishbone_b3_common_methods #(.ADR_W(ADR_W), .DAT_W(DAT_W), .TAG_W(TAG_W)) )
   
   virtual wishbone_b3_if #(.DAT_W(DAT_W), .ADR_W(ADR_W), .TAG_W(TAG_W)) sigs;
+  wishbone_b3_master_cfg cfg;
   
   extern          function new(string name = "wishbone_b3_common_methods");
   extern virtual  task     wait_for_response(output e_wishbone_b3_response response);
@@ -35,13 +40,22 @@ endfunction: new
 
 //------------------------------------------------------------------------//
 task wishbone_b3_common_methods::wait_for_response(output e_wishbone_b3_response response);
- wait( (sigs.m_drv_cb.ack === 1'b1) || (sigs.m_drv_cb.err === 1'b1) || (sigs.m_drv_cb.rty === 1'b1) );
- 
- // specifically not if-else so the value will overwrite if there is an erroneous multiple 
- // response.
- if (sigs.m_drv_cb.ack === 1'b1) response = WB_B3_RESPONSE_ACK_OK;
- if (sigs.m_drv_cb.rty === 1'b1) response = WB_B3_RESPONSE_ACK_RTY;
- if (sigs.m_drv_cb.err === 1'b1) response = WB_B3_RESPONSE_ACK_ERR;
+  fork
+   begin
+     wait( (sigs.m_drv_cb.ack === 1'b1) || (sigs.m_drv_cb.err === 1'b1) || (sigs.m_drv_cb.rty === 1'b1) );
+     // specifically not if-else so the value will overwrite if there is an erroneous multiple 
+     // response.
+     if (sigs.m_drv_cb.ack === 1'b1) response = WB_B3_RESPONSE_ACK_OK;
+     if (sigs.m_drv_cb.rty === 1'b1) response = WB_B3_RESPONSE_ACK_RTY;
+     if (sigs.m_drv_cb.err === 1'b1) response = WB_B3_RESPONSE_ACK_ERR;
+   end
+   begin
+     #cfg.timeout `uvm_error("WB_MON", "Transaction time-out!")
+     response = WB_B3_RESPONSE_ACK_ERR;
+     @(sigs.m_drv_cb); // synchronize driver operations to the current clock
+   end
+  join_any
+  disable fork;
  
 endtask: wait_for_response
 

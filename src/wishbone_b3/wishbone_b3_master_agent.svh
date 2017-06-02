@@ -13,6 +13,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //////////////////////////////////////////////////////////////////////////////
+//  Modifications:
+//      2017-03-31: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * added transaction timeout
+//////////////////////////////////////////////////////////////////////////////
 
 `ifndef WISHBONE_B3_MASTER_AGENT__SV
 `define WISHBONE_B3_MASTER_AGENT__SV
@@ -74,8 +78,8 @@ function void wishbone_b3_master_agent::build_phase(uvm_phase phase);
     
   if ( sigs == null ) `uvm_fatal(get_type_name(), $sformatf("%s interface not set!", this.get_full_name() ) )
     
-  // put cfg object in config_db so sequences can use it
-  uvm_config_db #(wishbone_b3_master_cfg)::set(null, {get_full_name(), ".seqr"}, "cfg", cfg);
+  // put cfg object in config_db
+  uvm_config_db #(wishbone_b3_master_cfg)::set(null, "*", "cfg", cfg);
   
 
   mon       = td_wishbone_b3_monitor::type_id::create("mon", this);

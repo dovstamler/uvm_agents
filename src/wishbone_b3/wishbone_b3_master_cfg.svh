@@ -13,6 +13,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //////////////////////////////////////////////////////////////////////////////
+//  Modifications:
+//      2017-03-31: by Jan Pospisil (fosfor.software@seznam.cz)
+//          * added transaction timeout
+//////////////////////////////////////////////////////////////////////////////
  
 `ifndef WISHBONE_B3_MASTER_CFG__SV
 `define WISHBONE_B3_MASTER_CFG__SV
@@ -24,9 +28,14 @@ class wishbone_b3_master_cfg extends uvm_object;
   // Variables: is_active
   // Agent can be defined passive or active.
   rand uvm_active_passive_enum is_active;
+  
+  // Variable: timeout
+  // Time-out for bus accesses.
+  int timeout = 0;
 
   `uvm_object_utils_begin(wishbone_b3_master_cfg)
     `uvm_field_enum(uvm_active_passive_enum, is_active, UVM_ALL_ON)
+    `uvm_field_int(timeout, UVM_ALL_ON)
   `uvm_object_utils_end
   
   extern function new(string name = "wishbone_b3_master_cfg");
